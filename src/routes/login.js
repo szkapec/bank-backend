@@ -35,7 +35,6 @@ app.post("/login", async (req, res) => {
         error: false,
         bankAccountNumber: user.bankAccountNumber,
         savedRecipients: user.savedRecipients,
-        transfers: user.transfers,
         premium: user.premium,
         money: user.money,
         message: 'Zalogowany',

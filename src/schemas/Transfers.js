@@ -1,58 +1,21 @@
 const mongoose = require('mongoose');
 
 
-const Users = mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    userName: {
-        type: String,
-        required: true,
-        // unique: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    lastName: {
-        type: String,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
+const Transfer = mongoose.Schema({
+    body: String,
     createdAt: String,
-    token: String,
-    refreshToken: String,
-    error: Boolean,
-    message: String,
-    bankAccountNumber: String,
-    premium: Boolean,
-    money: Number,
-    savedRecipients: [
-        {
-           body: String,
-           userId: String,
-           createdAt: String,
-           bankAccountNumber: String
-        }
-    ],
-    transfers: [
-        {
-          body: String,
-          numberSend: String,
-          numberReceived: String,
-          username: String,
-          createdAt: String,
-          send: Boolean,
-          bankAccountNumber: String,
-          howMuchMoney: String,
-        }
-    ],
+    howMuchMoney: String,
+    fromUser: {
+        bankAccountNumber: String,
+        email: String,
+        id: String
+    },
+    toUser: {
+        bankAccountNumber: String,
+        email: String,
+        id: String
+    }
 })
 
-let UserSchema = mongoose.model("transfers", Users);
+let UserSchema = mongoose.model("transfers", Transfer);
 module.exports = UserSchema

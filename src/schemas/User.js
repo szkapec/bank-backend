@@ -40,18 +40,6 @@ const Users = mongoose.Schema({
            bankAccountNumber: String
         }
     ],
-    transfers: [
-        {
-          body: String,
-          numberSend: String,
-          numberReceived: String,
-          username: String,
-          createdAt: String,
-          send: Boolean,
-          bankAccountNumber: String,
-          howMuchMoney: String,
-        }
-    ],
 })
 
 let UserSchema = mongoose.model("users", Users);

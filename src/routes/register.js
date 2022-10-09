@@ -58,7 +58,6 @@ app.post("/register", async (req, res) => {
         error: false,
         bankAccountNumber: newUser.bankAccountNumber,
         savedRecipients: newUser.savedRecipients,
-        transfers: newUser.transfers,
         premium: newUser.premium,
         money: newUser.money,
         message: 'Zalogowany',

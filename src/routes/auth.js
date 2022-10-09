@@ -22,7 +22,6 @@ app.get("/auth/:user_id", authenticateToken, async (req, res) => {
         error: false,
         bankAccountNumber,
         savedRecipients,
-        transfers,
         premium,
         money,
         message: 'Zalogowany',
