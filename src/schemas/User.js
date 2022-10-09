@@ -29,7 +29,7 @@ const Users = mongoose.Schema({
     refreshToken: String,
     error: Boolean,
     message: String,
-    bankAccountNumber: Number,
+    bankAccountNumber: String,
     premium: Boolean,
     money: Number,
     savedRecipients: [

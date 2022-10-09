@@ -8,25 +8,101 @@ const app = express();
 
 app.post('/transfer', authenticate, async(req, res) => {
  try {
-  console.log(`req.body`, req.body)
+  // console.log(`req.body`, req.body)
   const users = [{id: 1, name: 'Matix'}]
-  const { numberSend, numberReceived, username, howMuchMoney, myIdUser } = req.body
+  const { numberSend, numberReceived, username, howMuchMoney, myIdUser, body } = req.body
 
-  let findUserAccountNumber = []
-  let findUserIdNumber = []
-  findUserAccountNumber = await User.findOne({email: numberSend});
-  findUserIdNumber = await User.findById(myIdUser);
 
-  // console.log(`findUserAccountNumber.bankAccountNumber`, findUserAccountNumber)
-  console.log(`findUserIdNumber.bankAccountNumber`, findUserIdNumber)
+  const findFinalClientAccount = await User.findOne({bankAccountNumber: numberReceived});
+  if(findFinalClientAccount) {
+    console.log(`użytkownik istnieje`)
+  } else {
+    console.log(`Nie ma takiego użytkownika o podanym numerze konta!!`)
+    res.send({error: true, message: "Nie ma takiego użytkownika o podanym numerze konta!!"})
+    return res.status(401).send("Nie ma takiego użytkownika o podanym numerze konta!!");
+  }
+  
+  if(howMuchMoney > 0) {
+
+  } else {
+    console.log(`Przelew na mniej niż 0zł`)
+    res.send({error: true, message: "Przelew na mniej niż 0zł"})
+    return res.status(401).send("Przelew na mniej niż 0zł");
+  }
+
+
+  const findUserIdNumber = await User.findById(myIdUser);
+  const findUserAccountNumber = await User.findOne({bankAccountNumber: numberSend});
+  if(findUserAccountNumber && findUserIdNumber) {
+    if(findUserIdNumber.bankAccountNumber === findUserAccountNumber.bankAccountNumber) {
+      console.log(`Ten sam user`)
+      // res.send(
+      //   {
+      //     findUserIdNumber: findUserIdNumber.bankAccountNumber, 
+      //     findUserAccountNumber: findUserAccountNumber.bankAccountNumber
+      //   })
+    } else {
+      console.log(`Nie można zrobić przelewu z nie ze swojego konta!!`)
+      res.send({error: true, message: "Nie można zrobić przelewu z nie ze swojego konta!!"})
+      return res.status(401).send("Nie można zrobić przelewu z nie ze swojego konta!!");
+      
+    }
+  } else {
+    console.log(`Coś poszło nie tak`, )
+    res.send({error: true, message: 'Coś poszło nie tak'})
+    return res.status(500).send("Coś poszło nie tak");
+  }
+
+  findUserAccountNumber.transfers.unshift({
+    body,
+    username,
+    howMuchMoney,
+    numberSend,
+    numberReceived,
+    send: true,
+    createdAt: new Date().toISOString(),
+  })
+  const valueMoney = Number(findUserAccountNumber.money) - Number(howMuchMoney);
+  if(valueMoney>=0){
+    findUserAccountNumber.money = valueMoney;
+  } else {
+    res.send({error: true, message: 'Brak wystarczającej ilości pięniędzy!'})
+    return res.status(500).send("Brak wystarczającej ilości pięniędzy!");
+  }
+  console.log(`dziala!`, findUserAccountNumber)
+  
+  findFinalClientAccount.transfers.unshift({
+    body,
+    username,
+    howMuchMoney,
+    numberSend,
+    numberReceived,
+    send: false,
+    createdAt: new Date().toISOString(),
+  })
+  if(Number(howMuchMoney)>0){
+    findFinalClientAccount.money = Number(findFinalClientAccount.money) + Number(howMuchMoney)
+  } else {
+    res.send({error: true, message: 'Coś poszło nie tak, przepraszamy ;('})
+    return res.status(500).send("Coś poszło nie tak, przepraszamy ;(");
+  }
+
+  
+  if(findFinalClientAccount && findUserAccountNumber) {
+    const newTransfer = await findUserAccountNumber.save();
+    await findFinalClientAccount.save();
+    return res.send({transfer: newTransfer, message: 'Jest w pyte!'})
+  } else {
+    res.send({error: true, message: 'Błąd podczas zapisu danych'})
+    return res.status(500).send("Błąd podczas zapisu danych");
+  }
 
   // if(findUserAccountNumber.bankAccountNumber == findUserIdNumber.bankAccountNumber){
   //   console.log(`Przelew!`)
   // } else {
   //   console.log(`Nie można zrobić przelewu z nie ze swojego konta!!`, )
   // }
-  res.send(
-    {test: findUserIdNumber.bankAccountNumber})
+
   
 
   // console.log(`findUserAccountNumber`, findUserAccountNumber)
