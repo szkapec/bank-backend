@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 
 
 const Users = mongoose.Schema({
-    name: {
+    firstName: {
         type: String,
         required: true,
     },
-    userName: {
-        type: String,
-        required: true,
-        // unique: true,
-    },
+    // userName: {
+    //     type: String,
+    //     required: true,
+    //     // unique: true,
+    // },
     email: {
         type: String,
         required: true,
@@ -32,6 +32,8 @@ const Users = mongoose.Schema({
     bankAccountNumber: String,
     premium: Boolean,
     money: Number,
+    sex: [String],
+    country: String,
     savedRecipients: [
         {
            body: String,

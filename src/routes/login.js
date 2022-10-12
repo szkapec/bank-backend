@@ -14,13 +14,16 @@ app.post("/login", async (req, res) => {
     if (!user) {
       // res.send("Nie ma taiego uzytkownika o takim e-mail");
       // return res.status(404).send("Nie ma taiego uzytkownika2 o takim e-mail");
-      return res.status(401).json("Nie ma takiego użytkownika o takim e-mail");
+      res.send({error: true, message: 'Nie ma takiego użytkownika o takim e-mail'})
+      return res.status(401).send("Nie ma takiego użytkownika o takim e-mail");
     }
 
     let doPasswordsMatch = await bcryptjs.compare(password, user.password);
     console.log('user', user)
     if (!doPasswordsMatch) {
-      return res.status(401).json("Hasło nie pasuje");
+      // return res.status(401).json("Hasło nie pasuje");
+      res.send({error: true, message: 'Hasło nie pasuje'})
+      return res.status(401).send("Hasło nie pasuje");
     }
     // const token = {
     //   const accessToken = jwt.sign({ id: 1, name: 'matix' }, process.env.TOKEN_SECRET, { expiresIn: 86400 }) //stworz token

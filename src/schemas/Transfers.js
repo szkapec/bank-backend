@@ -14,7 +14,9 @@ const Transfer = mongoose.Schema({
         bankAccountNumber: String,
         email: String,
         id: String
-    }
+    },
+    fromNumber: String,
+    toNumber: String,
 })
 
 let UserSchema = mongoose.model("transfers", Transfer);

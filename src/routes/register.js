@@ -7,32 +7,34 @@ const app = express();
 
 app.post("/register", async (req, res) => {
   try {
-    let { name, lastName, userName, email, password } = req.body;
+    let { firstName, lastName, email, password, country, sex } = req.body;
     let user = await User.findOne({
       email: email,
     }).select("-password");
     console.log(`user`, user);
 
-    let fetchUserName = await User.findOne({
-      fetchUserName: userName,
-    }).select("-password");
+    // let fetchUserName = await User.findOne({
+    //   fetchUserName: userName,
+    // }).select("-password");
 
     if (user) {
       res.send("taki email juz jest");
       return res.status(401).send("Taki email juz istnieje");
     }
-    if (fetchUserName === userName) {
-      return res.status(401).send("Taki username juz istnieje");
-    }
+    // if (fetchUserName === userName) {
+    //   return res.status(401).send("Taki username juz istnieje");
+    // }
 
-    const refreshToken = jwt.sign({ name, userName, email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: 325000 })
+    const refreshToken = jwt.sign({ firstName, lastName, email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: 325000 })
 
     const randomNumber = '921240' + Math.floor(Math.random() *  100000000000000);
     let newUser = new User({
-      name,
+      firstName,
       lastName,
-      userName,
+      // userName,
       email,
+      country,
+      sex,
       password,
       createdAt: new Date().toISOString(),
       refreshToken,
@@ -48,12 +50,14 @@ app.post("/register", async (req, res) => {
     newUser.password = hashedPassword;
     await newUser.save(); //zapis w bazie danych
 
-    const token = jwt.sign({ id: newUser._id, name: newUser.name, email: newUser.email }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
+    const token = jwt.sign({ id: newUser._id, firstName: newUser.firstName, email: newUser.email }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
 
     let payload = {
         id: newUser._id,
         token,
         refreshToken,
+        sex,
+        country,
         email: newUser.email,
         error: false,
         bankAccountNumber: newUser.bankAccountNumber,

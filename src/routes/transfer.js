@@ -74,6 +74,8 @@ app.post('/transfer', authenticate, async(req, res) => {
       email: findFinalClientAccount.email,
       id: findFinalClientAccount._id
     },
+    fromNumber: findUserAccountNumber.bankAccountNumber,
+    toNumber: findFinalClientAccount.bankAccountNumber,
     body,
     howMuchMoney,
     createdAt: new Date().toISOString(),
@@ -84,8 +86,10 @@ app.post('/transfer', authenticate, async(req, res) => {
   if(findFinalClientAccount && findUserAccountNumber) {
     await newUserTransfer.save();
     const newTransfer = await findUserAccountNumber.save();
+    newTransfer.message = "Przelew wykonany!"
+    newTransfer.error = false
     await findFinalClientAccount.save();
-    return res.send({transfer: newTransfer, message: 'Jest w pyte!'})
+    return res.send(newTransfer)
   } else {
     res.send({error: true, message: 'Błąd podczas zapisu danych'})
     return res.status(500).send("Błąd podczas zapisu danych");
@@ -95,6 +99,23 @@ app.post('/transfer', authenticate, async(req, res) => {
    console.log(`error`, error)
    res.send(error)
  }
+})
+
+app.get('/transfers', authenticate, async(req, res) => { 
+  try {
+    const { bankAccountNumber } = req.body
+    console.log(`bankAccountNumber`, bankAccountNumber)
+    const fromClient = await Transfer.find({$or: [{fromNumber: bankAccountNumber}, {toNumber: bankAccountNumber}]}).limit(20);//.limit(10)
+    // const toClient = await Transfer.find({toNumber: bankAccountNumber});
+
+    console.log(`fromClient`, fromClient)
+    // console.log(`toClient`, toClient)
+
+    return res.send({fromClient, message: 'Jest w pyte!'})
+  } catch (error) {
+    console.log(`error`, error)
+    res.send(error)
+  }
 })
 
 module.exports = app;
