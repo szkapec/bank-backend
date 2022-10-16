@@ -8,12 +8,16 @@ const Transfer = mongoose.Schema({
     fromUser: {
         bankAccountNumber: String,
         email: String,
-        id: String
+        id: String,
+        firstName: String,
+        lastName: String,
     },
     toUser: {
         bankAccountNumber: String,
         email: String,
-        id: String
+        id: String,
+        firstName: String,
+        lastName: String,
     },
     fromNumber: String,
     toNumber: String,
