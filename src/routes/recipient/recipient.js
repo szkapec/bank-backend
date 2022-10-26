@@ -29,8 +29,8 @@ app.put("/recipient", authenticate, async (req, res) => {
   const token = authHeader && authHeader.split(" ")[1];
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
-    console.log(`id`, id)
-    console.log(`user.id`, user.id)
+    console.log(`id`, id);
+    console.log(`user.id`, user.id);
     if (id !== user.id) {
       res.send({
         error: true,
@@ -42,7 +42,7 @@ app.put("/recipient", authenticate, async (req, res) => {
 
   try {
     const user = await User.findById(id);
-    if(!user) {
+    if (!user) {
       res.send({
         error: true,
         message: "Nie ma takiego użytkownika",
@@ -59,7 +59,7 @@ app.put("/recipient", authenticate, async (req, res) => {
       toRecipient,
       trustedRecipient,
     };
-  
+
     user.savedRecipients.unshift(newRecipient);
     res.send(user.savedRecipients);
     await user.save();
@@ -73,7 +73,7 @@ app.put("/recipient", authenticate, async (req, res) => {
 });
 
 app.get("/recipient/:user_id", authenticate, async (req, res) => {
-  const { user_id } = req.params
+  const { user_id } = req.params;
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
@@ -89,8 +89,8 @@ app.get("/recipient/:user_id", authenticate, async (req, res) => {
 
   try {
     const user = await User.findById(user_id).select("-password");
-    if(!user) {
-      return res.status(403).send('Nie ma takiego uzytwkonika o tym ID');
+    if (!user) {
+      return res.status(403).send("Nie ma takiego uzytwkonika o tym ID");
     }
     return res.json(user.savedRecipients);
   } catch (error) {
@@ -98,7 +98,6 @@ app.get("/recipient/:user_id", authenticate, async (req, res) => {
     return res.status(500).send("Serwer error login!!!!.");
   }
 });
-
 
 app.patch("/recipient/edit", authenticate, async (req, res) => {
   const {
@@ -117,8 +116,8 @@ app.patch("/recipient/edit", authenticate, async (req, res) => {
   let idUser;
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
-    console.log(`id`, _id)
-    console.log(`user.id`, user.id)
+    console.log(`id`, _id);
+    console.log(`user.id`, user.id);
     if (!user.id) {
       res.send({
         error: true,
@@ -132,28 +131,27 @@ app.patch("/recipient/edit", authenticate, async (req, res) => {
 
   try {
     const user = await User.findById(idUser.id);
-    if(!user) {
+    if (!user) {
       res.send({
         error: true,
         message: "Brak autoryzacji",
       });
       return res.sendStatus(400);
     }
-    console.log(`id`, _id)
+    console.log(`id`, _id);
     let changeIndex;
     const newUsers = user.savedRecipients.find((saved, index) => {
-
-      changeIndex = index
-      console.log(`saved._id.toString()`, saved._id.toString())
-      return saved._id.toString() === _id
+      changeIndex = index;
+      console.log(`saved._id.toString()`, saved._id.toString());
+      return saved._id.toString() === _id;
     });
-    if(!newUsers) {
+    if (!newUsers) {
       res.send({
         error: true,
         message: "Nie ma takiego zapisanego przelewu",
       });
     }
-    console.log(`newUsers`, newUsers)
+    console.log(`newUsers`, newUsers);
     const newRecipient = {
       recipientsAccount,
       recipientsAdress,
@@ -164,8 +162,8 @@ app.patch("/recipient/edit", authenticate, async (req, res) => {
       toRecipient,
       trustedRecipient,
     };
-  
-    user.savedRecipients[changeIndex] = newRecipient
+
+    user.savedRecipients[changeIndex] = newRecipient;
     res.send(user.savedRecipients);
     await user.save();
   } catch (error) {
@@ -177,10 +175,9 @@ app.patch("/recipient/edit", authenticate, async (req, res) => {
   }
 });
 
-
-app.delete('/recipient/:recipient_id', authenticate, async (req,res) => {
+app.delete("/recipient/:recipient_id", authenticate, async (req, res) => {
   try {
-    const { recipient_id } = req.params
+    const { recipient_id } = req.params;
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     let idUser;
@@ -196,23 +193,24 @@ app.delete('/recipient/:recipient_id', authenticate, async (req,res) => {
         idUser = user;
       }
     });
-      let user = await User.findById(idUser.id);
-      if(!user) {
-        res.send({
-          error: true,
-          message: "Brak autoryzacji",
-        });
-        return res.sendStatus(400);
-      }
-      const filterUser = user.savedRecipients.filter(recipient => recipient._id.toString() !== recipient_id)
-      user.savedRecipients = filterUser;
-      res.send(user.savedRecipients);
-      await user.save();
-
+    let user = await User.findById(idUser.id);
+    if (!user) {
+      res.send({
+        error: true,
+        message: "Brak autoryzacji",
+      });
+      return res.sendStatus(400);
+    }
+    const filterUser = user.savedRecipients.filter(
+      (recipient) => recipient._id.toString() !== recipient_id
+    );
+    user.savedRecipients = filterUser;
+    res.send(user.savedRecipients);
+    await user.save();
   } catch (error) {
-      console.error(error)
-      return res.status(500).json("Server Error...")
+    console.error(error);
+    return res.status(500).json("Server Error...");
   }
-})
+});
 
 module.exports = app;
