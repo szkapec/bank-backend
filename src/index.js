@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import jwt  from 'jsonwebtoken';
 import express from 'express';
-import User from './schemas/User';
 import connectToDatabase from './config/connectToDataBase';
 import cors from 'cors'
 
@@ -35,6 +34,9 @@ app.use('/api', auth)
 const transfer = require('./routes/transfer');
 app.use('/api', transfer)
 
+const recipient = require('./routes/recipient/recipient')
+app.use('/api', recipient)
+
 
 app.post('/api/auth/login', (req, res) => {
   try {
@@ -57,32 +59,7 @@ app.post('/api/auth/login', (req, res) => {
   } catch (error) {
     return res.sendStatus(403)
   }
-
 })
-
-
-
-// function authenticate(req, res, next) {
-
-//   console.log(`req.body`, req.body)
-//   const authHeader = req.headers['authorization']
-//   const token = authHeader && authHeader.split(' ')[1]
-
-//   if(token === null) return res.sendStatus(401)
-//   //weryfikacja tokena
-//   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-//     if(err) return res.sendStatus(403)
-//     req.user = user;
-//     next() // zadanie dalej przetwarzane
-//   })
-
-// }
-
-
-
-
-
-
 
 
 app.listen(5000, () => {

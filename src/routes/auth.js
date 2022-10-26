@@ -13,7 +13,7 @@ app.get("/auth/:user_id", authenticateToken, async (req, res) => {
     }
     
     console.log(`user`, user)
-    const { _id, token, refreshToken, email, bankAccountNumber, savedRecipients, transfers, money, premium} = user
+    const { _id, token, refreshToken, email, bankAccountNumber, money, premium} = user
     let payload = {
         id: _id,
         token,
@@ -21,7 +21,6 @@ app.get("/auth/:user_id", authenticateToken, async (req, res) => {
         email,
         error: false,
         bankAccountNumber,
-        savedRecipients,
         premium,
         money,
         message: 'Zalogowany',

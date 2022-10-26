@@ -6,11 +6,6 @@ const Users = mongoose.Schema({
         type: String,
         required: false,
     },
-    // userName: {
-    //     type: String,
-    //     required: true,
-    //     // unique: true,
-    // },
     email: {
         type: String,
         required: true,
@@ -36,10 +31,15 @@ const Users = mongoose.Schema({
     country: String,
     savedRecipients: [
         {
-           body: String,
-           userId: String,
-           createdAt: String,
-           bankAccountNumber: String
+            recipientsAccount: String,
+            recipientsAdress: String,
+            recipientsName: String,
+            sum: String,
+            title: String,
+            toRecipient: String,
+            trustedRecipient: Boolean,
+            createdAt: String,
+            required: false
         }
     ],
 })
