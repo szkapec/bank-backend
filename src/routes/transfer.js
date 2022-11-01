@@ -73,10 +73,10 @@ app.post("/transfer", authenticate, async (req, res) => {
     if (valueMoney >= 0) {
       findUserAccountNumber.money = valueMoney;
     } else {
-      res.send({
-        error: true,
-        message: "Brak wystarczającej ilości pięniędzy!",
-      });
+      // res.send({
+      //   error: true,
+      //   message: "Brak wystarczającej ilości pięniędzy!",
+      // });
       return res.status(500).send("Brak wystarczającej ilości pięniędzy!");
     }
     console.log(`dziala!`, findUserAccountNumber);
