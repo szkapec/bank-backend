@@ -118,7 +118,7 @@ app.post("/transfer", authenticate, async (req, res) => {
       newTransfer.message = "Przelew wykonany!";
       newTransfer.error = false;
       await findFinalClientAccount.save();
-      return res.send(newTransfer);
+      return res.send(newUserTransfer);
     } else {
       res.send({ error: true, message: "Błąd podczas zapisu danych" });
       return res.status(500).send("Błąd podczas zapisu danych");
@@ -129,7 +129,7 @@ app.post("/transfer", authenticate, async (req, res) => {
   }
 });
 
-app.get("/transfers/:bankAccountNumber", authenticate, async (req, res) => {
+app.get("/transfers/:bankAccountNumber/:pageNumber", authenticate, async (req, res) => {
 
   try {
     const authHeader = req.headers["authorization"];
@@ -155,14 +155,19 @@ app.get("/transfers/:bankAccountNumber", authenticate, async (req, res) => {
         message: "NIe ma takiego użytkownika o tym numerze konta",
       });
     }
-    console.log(`req.params`, req.params)
+    // console.log(`req.params.bankAccountNumber`, req.params.bankAccountNumber)
+    // console.log(`userFind.bankAccountNumber`, userFind.bankAccountNumber)
+    // console.log(` req.params.pageNumber`,  req.params.pageNumber )
     if (userFind.bankAccountNumber === req.params.bankAccountNumber) {
+      let skip = (req.params.pageNumber - 1) * 5
+      console.log(`skip`, skip)
       const fromClient = await Transfer.find({
         $or: [
           { fromNumber: req.params.bankAccountNumber },
           { toNumber: req.params.bankAccountNumber },
         ],
-      }).sort({ $natural: -1 }).limit(50)
+        // $slice: [1,4]
+      }).sort({ $natural: -1 } ).skip(skip).limit(5)//{fromClient:{$slice: [2, 10]}}   .limit(10) 
       return res.send({ fromClient, message: "Jest w pyte!" });
     } else {
       res.send({

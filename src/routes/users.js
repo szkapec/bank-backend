@@ -7,9 +7,7 @@ import { authenticate } from "../config/authenticate";
 const app = express();
 
 app.get('/users', authenticate, (req, res) => {
-  console.log(`req.body`, req.body)
   const users = [{id: 1, name: 'Matix'}]
-
   res.send(users)
 })
 
