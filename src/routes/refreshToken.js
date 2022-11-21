@@ -16,8 +16,6 @@ refresh.post('/refresh',   [
   
   // na frontend trzymamy caly czas refreshToken
   const user = await User.findOne({ refreshToken: req.body.refreshToken }).select("-password");
-  console.log(`user`, user)
-  console.log(`req.body.email`, req.body.email)
   const email = req.body.email === user.email
   if(!email) {
     return res.status(404).send("Zły token!");

@@ -29,8 +29,6 @@ app.put("/recipient", authenticate, async (req, res) => {
   const token = authHeader && authHeader.split(" ")[1];
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
-    console.log(`id`, id);
-    console.log(`user.id`, user.id);
     if (id !== user.id) {
       res.send({
         error: true,

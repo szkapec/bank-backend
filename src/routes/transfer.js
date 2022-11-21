@@ -24,14 +24,8 @@ app.post("/transfer", authenticate, async (req, res) => {
     if (findFinalClientAccount) {
       console.log(`użytkownik istnieje`);
     } else {
-      console.log(`Nie ma takiego użytkownika o podanym numerze konta!!`);
-      res.send({
-        error: true,
-        message: "Nie ma takiego użytkownika o podanym numerze konta!!",
-      });
-      return res
-        .status(401)
-        .send("Nie ma takiego użytkownika o podanym numerze konta!!");
+      console.log(`Nie ma takiego użytkownika o podanym numerze kontaa!!`);
+      return res.status(500).send({message: 'Nie ma takiego użytkownika o podanym numerze kontaa!'});
     }
 
     if (howMuchMoney > 0) {
@@ -73,14 +67,8 @@ app.post("/transfer", authenticate, async (req, res) => {
     if (valueMoney >= 0) {
       findUserAccountNumber.money = valueMoney;
     } else {
-      // res.send({
-      //   error: true,
-      //   message: "Brak wystarczającej ilości pięniędzy!",
-      // });
-      return res.status(500).send("Brak wystarczającej ilości pięniędzy!");
+      return res.status(500).send({ message: "Brak wystarczającej ilości pięniędzy!" });
     }
-    console.log(`dziala!`, findUserAccountNumber);
-    console.log(`findFinalClientAccount!`, findFinalClientAccount)
     if (Number(howMuchMoney) > 0) {
       findFinalClientAccount.money =
         Number(findFinalClientAccount.money) + Number(howMuchMoney);

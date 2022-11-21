@@ -11,7 +11,6 @@ app.post("/register", async (req, res) => {
     let user = await User.findOne({
       email: email,
     }).select("-password");
-    console.log(`user`, user);
 
     // let fetchUserName = await User.findOne({
     //   fetchUserName: userName,

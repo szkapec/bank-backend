@@ -19,7 +19,6 @@ app.post("/login", async (req, res) => {
     }
 
     let doPasswordsMatch = await bcryptjs.compare(password, user.password);
-    console.log('user', user)
     if (!doPasswordsMatch) {
       // return res.status(401).json("Hasło nie pasuje");
       res.send({error: true, message: 'Hasło nie pasuje'})
