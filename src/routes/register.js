@@ -41,7 +41,8 @@ app.post("/register", async (req, res) => {
       bankAccountNumber: randomNumber,
       savedRecipients: [],
       money: 10,
-      premium: false
+      premium: false,
+      ban: false,
     });
 
     const salt = await bcryptjs.genSalt(10);
@@ -63,6 +64,7 @@ app.post("/register", async (req, res) => {
         savedRecipients: newUser.savedRecipients,
         premium: newUser.premium,
         money: newUser.money,
+        ban: newUser.ban,
         message: 'Zalogowany',
     };
 

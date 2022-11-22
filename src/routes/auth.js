@@ -11,7 +11,7 @@ app.get("/auth/:user_id", authenticateToken, async (req, res) => {
     if(!user) {
       return res.status(403).send('Nie ma takiego uzytwkonika o tym ID');
     }
-    const { _id, token, refreshToken, email, bankAccountNumber, money, premium} = user
+    const { _id, token, refreshToken, email, bankAccountNumber, money, premium, ban} = user
     let payload = {
         id: _id,
         token,
@@ -22,6 +22,7 @@ app.get("/auth/:user_id", authenticateToken, async (req, res) => {
         premium,
         money,
         message: 'Zalogowany',
+        ban,
     };
     res.json(payload);
   } catch (error) {

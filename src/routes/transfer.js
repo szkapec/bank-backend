@@ -8,7 +8,6 @@ const app = express();
 
 app.post("/transfer", authenticate, async (req, res) => {
   try {
-    // console.log(`req.body`, req.body)
     const {
       numberSend,
       numberReceived,

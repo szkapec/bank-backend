@@ -26,6 +26,7 @@ const Users = mongoose.Schema({
     message: String,
     bankAccountNumber: String,
     premium: Boolean,
+    ban: Boolean,
     money: Number,
     sex: [String],
     country: String,
