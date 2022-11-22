@@ -44,6 +44,10 @@ app.use("/api", recipient);
 const admin = require("./routes/admin/adminUsers");
 app.use("/api", admin);
 
+app.use('/', (req, res) => {
+  res.send('Hello ;)')
+})
+
 const stream = require("./routes/stream");
 app.use("/api", stream);
 
