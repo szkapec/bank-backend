@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import express from "express";
-import User from "../schemas/User";
+import User from "../../schemas/User";
 import bcryptjs from "bcryptjs";
 
 const app = express();

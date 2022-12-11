@@ -5,6 +5,7 @@ import connectToDatabase from "./config/connectToDataBase";
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
+import ServerlessHttp from "serverless-http";
 
 dotenv.config();
 
@@ -20,11 +21,20 @@ connectToDatabase();
 const Stream = require("./routes/sse/sse.route");
 app.use("/", Stream);
 
-const Register = require("./routes/register");
+const Register = require("./routes/login/register");
 app.use("/api/users", Register);
 
-const login = require("./routes/login");
+const login = require("./routes/login/login");
 app.use("/api/users", login);
+
+const remindPassword = require('./routes/login/remind-password');
+app.use("/api/users", remindPassword)
+
+const remindCode = require('./routes/login/remind-code');
+app.use("/api/users", remindCode)
+
+const changePassword = require('./routes/login/change-password');
+app.use("/api/users", changePassword)
 
 const refresh = require("./routes/refreshToken");
 app.use("/api/auth", refresh);
@@ -43,10 +53,6 @@ app.use("/api", recipient);
 
 const admin = require("./routes/admin/adminUsers");
 app.use("/api", admin);
-
-app.use('/', (req, res) => {
-  res.send('Hello ;)')
-})
 
 const stream = require("./routes/stream");
 app.use("/api", stream);
@@ -82,3 +88,6 @@ app.post("/api/auth/login", (req, res) => {
 app.listen(5000, () => {
   console.log(`wake up! xd`);
 });
+
+module.exports = app;
+module.exports.handler = ServerlessHttp(app);

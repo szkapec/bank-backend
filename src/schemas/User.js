@@ -30,6 +30,11 @@ const Users = mongoose.Schema({
     money: Number,
     sex: [String],
     country: String,
+    remind: {
+        createdAt: String,
+        key: String,
+        required: false
+    },
     savedRecipients: [
         {
             recipientsAccount: String,
