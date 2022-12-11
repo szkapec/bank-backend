@@ -31,8 +31,8 @@ app.post("/remind-password", async (req, res) => {
       const info = await transporter.sendMail({
         to: email,
         from: process.env.EMAIL_NAME,
-        subject: "Subject",
-        text: `This is the content ${newRemind.key}`
+        subject: "Przypomnienie hasła",
+        text: `Twój klucz do przypomnienia hasła to: ${newRemind.key}`
       })
       nodemailer.getTestMessageUrl(info)
    
