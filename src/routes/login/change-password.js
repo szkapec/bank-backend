@@ -8,7 +8,6 @@ const app = express();
 app.post("/change-password", async (req, res) => {
   try {
     const { code, email, password } = req.body;
-
     try {
       const user = await User.find({ email });
       if(user[0].remind.key === code) {
