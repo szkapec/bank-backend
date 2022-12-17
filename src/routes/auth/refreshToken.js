@@ -1,11 +1,10 @@
 import jwt from "jsonwebtoken";
 import express from "express";
-import bcryptjs from "bcryptjs";
 const {
   check,
   validationResult
 } = require("express-validator")
-import User from '../schemas/User';
+import User from '../../schemas/User';
 
 const refresh = express();
 

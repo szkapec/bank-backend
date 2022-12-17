@@ -9,12 +9,12 @@ app.post("/change-password", async (req, res) => {
   try {
     const { code, email, password } = req.body;
     try {
-      const user = await User.find({ email });
-      if(user[0].remind.key === code) {
+      const user = await User.findOne({ email });
+      if(user.remind.key === code) {
         const salt = await bcryptjs.genSalt(10);
         let hashedPassword = await bcryptjs.hash(password, salt);
-        user[0].password = hashedPassword;
-        await user[0].save();
+        user.password = hashedPassword;
+        await user.save();
         return res.json({ message: 'Zmieniono hasło', password: true });
       }
     } catch (error) {

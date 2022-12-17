@@ -36,16 +36,25 @@ app.use("/api/users", remindCode)
 const changePassword = require('./routes/login/change-password');
 app.use("/api/users", changePassword)
 
-const refresh = require("./routes/refreshToken");
+const checkPassword = require('./routes/login/check-password');
+app.use("/api/users", checkPassword)
+
+const setNewPassword = require('./routes/login/set-new-password');
+app.use("/api/users", setNewPassword)
+
+const refresh = require("./routes/auth/refreshToken");
 app.use("/api/auth", refresh);
 
-const users = require("./routes/users");
-app.use("/api", users);
+const languageChange = require("./routes/login/change-language")
+app.use("/api/users", languageChange)
 
-const auth = require("./routes/auth");
+const limitChange = require("./routes/user/change-limit")
+app.use("/api/users", limitChange)
+
+const auth = require("./routes/auth/auth");
 app.use("/api", auth);
 
-const transfer = require("./routes/transfer");
+const transfer = require("./routes/transfers/transfer");
 app.use("/api", transfer);
 
 const recipient = require("./routes/recipient/recipient");

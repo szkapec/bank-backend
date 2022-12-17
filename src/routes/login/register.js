@@ -33,6 +33,8 @@ app.post("/register", async (req, res) => {
       // userName,
       email,
       country,
+      language: country,
+      permission: ['done'],
       sex,
       password,
       createdAt: new Date().toISOString(),
@@ -43,6 +45,12 @@ app.post("/register", async (req, res) => {
       money: 10,
       premium: false,
       ban: false,
+      color: 'light',
+      limit: {
+        limitDay: 50,
+        limitMouth: 500,
+        limitFull: 250,
+      }
     });
 
     const salt = await bcryptjs.genSalt(10);
@@ -59,12 +67,17 @@ app.post("/register", async (req, res) => {
         sex,
         country,
         email: newUser.email,
+        language: newUser.language,
+        country: newUser.country,
+        permission: newUser.permission,
         error: false,
         bankAccountNumber: newUser.bankAccountNumber,
         savedRecipients: newUser.savedRecipients,
         premium: newUser.premium,
         money: newUser.money,
         ban: newUser.ban,
+        color: newUser.color,
+        limit: newUser.limit,
         message: 'Zalogowany',
     };
 

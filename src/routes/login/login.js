@@ -13,19 +13,18 @@ app.post("/login", async (req, res) => {
 
     if (!user) {
       res.send({
-        error: true,
         message: "Nie ma takiego użytkownika o takim e-mail",
       });
       return res.status(401).send("Nie ma takiego użytkownika o takim e-mail");
     }
     if (user.ban) {
-      res.send({ error: true, message: "Twoje konto zostało zbanowane" });
+      res.send({ message: "Twoje konto zostało zbanowane" });
       return res.status(401).send("Twoje konto zostało zbanowane");
     }
 
     let doPasswordsMatch = await bcryptjs.compare(password, user.password);
     if (!doPasswordsMatch) {
-      res.send({ error: true, message: "Hasło nie pasuje" });
+      res.send({ message: "Hasło nie pasuje" });
       return res.status(401).send("Hasło nie pasuje");
     }
 
@@ -44,12 +43,16 @@ app.post("/login", async (req, res) => {
       token,
       refreshToken,
       email: user.email,
+      language: user.language,
+      permission: user.permission,
+      limit: user.limit,
       error: false,
       bankAccountNumber: user.bankAccountNumber,
       savedRecipients: user.savedRecipients,
       premium: user.premium,
       money: user.money,
       ban: user.ban,
+      color: user.color,
       message: "Zalogowany",
     };
 

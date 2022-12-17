@@ -21,6 +21,7 @@ const Users = mongoose.Schema({
     },
     createdAt: String,
     token: String,
+    language: String,
     refreshToken: String,
     error: Boolean,
     message: String,
@@ -29,7 +30,14 @@ const Users = mongoose.Schema({
     ban: Boolean,
     money: Number,
     sex: [String],
+    permission: [String],
     country: String,
+    color: String,
+    limit: {
+        limitDay: Number,
+        limitMouth: Number,
+        limitFull: Number,
+    },
     remind: {
         createdAt: String,
         key: String,

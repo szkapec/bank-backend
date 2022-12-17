@@ -1,7 +1,7 @@
 import express from "express";
-import User from "../schemas/User";
-import Transfer from "../schemas/Transfers";
-import { authenticate } from "../config/authenticate";
+import User from "../../schemas/User";
+import Transfer from "../../schemas/Transfers";
+import { authenticate } from "../../config/authenticate";
 const jwt = require("jsonwebtoken");
 
 const app = express();
@@ -24,14 +24,13 @@ app.post("/transfer", authenticate, async (req, res) => {
       console.log(`użytkownik istnieje`);
     } else {
       console.log(`Nie ma takiego użytkownika o podanym numerze kontaa!!`);
-      return res.status(500).send({message: 'Nie ma takiego użytkownika o podanym numerze kontaa!'});
+      return res.status(500).send({ message: 'Nie ma takiego użytkownika o podanym numerze konta!' });
     }
 
     if (howMuchMoney > 0) {
     } else {
       console.log(`Przelew na mniej niż 0zł`);
-      res.send({ error: true, message: "Przelew na mniej niż 0zł" });
-      return res.status(401).send("Przelew na mniej niż 0zł");
+      return res.status(400).send({ message: "Przelew na mniej niż 0zł" });
     }
 
     const findUserAccountNumber = await User.findOne({
@@ -47,33 +46,37 @@ app.post("/transfer", authenticate, async (req, res) => {
         console.log(`Ten sam user`);
       } else {
         console.log(`Nie można zrobić przelewu z nie ze swojego konta!!`);
-        res.send({
-          error: true,
-          message: "Nie można zrobić przelewu z nie ze swojego konta!!",
-        });
-        return res
-          .status(401)
-          .send("Nie można zrobić przelewu z nie ze swojego konta!!");
+        return res.status(400).send({ message: "Nie mozna zrobić przelewu z nie ze swojego konta!" });
       }
     } else {
       console.log(`Coś poszło nie tak`);
-      res.send({ error: true, message: "Coś poszło nie tak" });
       return res.status(500).send("Coś poszło nie tak");
     }
 
     const valueMoney =
       Number(findUserAccountNumber.money) - Number(howMuchMoney);
+
+
+
     if (valueMoney >= 0) {
       findUserAccountNumber.money = valueMoney;
+
+      console.log(`howMuchMoney`, howMuchMoney)
+      console.log(`findUserAccountNumber.limit.limitDay`, findUserAccountNumber.limit.limitDay)
+      console.log(`howMuchMoney > findUserAccountNumber.limit.limitDay`, howMuchMoney > findUserAccountNumber.limit.limitDay)
     } else {
-      return res.status(500).send({ message: "Brak wystarczającej ilości pięniędzy!" });
+      return res.status(400).send({ message: "Brak wystarczającej ilości pięniędzy!" });
     }
+
+    if(howMuchMoney > findUserAccountNumber.limit.limitDay) {
+      return res.status(400).send({ message: `Przekroczony limit. Twój limit to: ${findUserAccountNumber.limit.limitDay}zł` });
+    };
+
     if (Number(howMuchMoney) > 0) {
       findFinalClientAccount.money =
         Number(findFinalClientAccount.money) + Number(howMuchMoney);
     } else {
-      res.send({ error: true, message: "Coś poszło nie tak, przepraszamy ;(" });
-      return res.status(500).send("Coś poszło nie tak, przepraszamy ;(");
+      return res.status(400).send({ message: "Coś poszło nie tak, przepraszamy ;("});
     }
 
     const newUserTransfer = new Transfer({
@@ -128,23 +131,15 @@ app.get("/transfers/:bankAccountNumber/:pageNumber", authenticate, async (req, r
     });
 
     if(!user) {
-      return res.send({
-        error: true,
-        message: "Bledna autoryzacja!",
-      });
+      return res.status(500).send({ message: "Błędna autoryzacja"});
     }
 
     const userFind = await User.findById(user.id);
     
     if(!userFind && !userFind.bankAccountNumber) {
-      return res.send({
-        error: true,
-        message: "NIe ma takiego użytkownika o tym numerze konta",
-      });
+      return res.status(400).send({ message: "Nie ma takiego użytkownika o takim numerze konta!"});
     }
-    // console.log(`req.params.bankAccountNumber`, req.params.bankAccountNumber)
-    // console.log(`userFind.bankAccountNumber`, userFind.bankAccountNumber)
-    // console.log(` req.params.pageNumber`,  req.params.pageNumber )
+
     if (userFind.bankAccountNumber === req.params.bankAccountNumber) {
       let skip = (req.params.pageNumber - 1) * 5
       console.log(`skip`, skip)
@@ -157,13 +152,7 @@ app.get("/transfers/:bankAccountNumber/:pageNumber", authenticate, async (req, r
       }).sort({ $natural: -1 } ).skip(skip).limit(5)//{fromClient:{$slice: [2, 10]}}   .limit(10) 
       return res.send({ fromClient, message: "Jest w pyte!" });
     } else {
-      res.send({
-        error: true,
-        message: "Nie możesz zobaczyć nie swojej historii przelewów!!",
-      });
-      return res
-        .status(401)
-        .send("Nie możesz zobaczyć nie swojej historii przelewów!!");
+      return res.status(400).send({ message: "Nie możesz zobaczyć nie swojej historii przelewów!"});
     }
   } catch (error) {
     console.log(`error`, error);
