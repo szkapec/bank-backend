@@ -42,6 +42,15 @@ app.use("/api/users", checkPassword)
 const setNewPassword = require('./routes/login/set-new-password');
 app.use("/api/users", setNewPassword)
 
+const newConnectAccount = require('./routes/user/new-connect-account');
+app.use("/api/users", newConnectAccount)
+
+const connectAccount = require('./routes/user/connect-account');
+app.use("/api/users", connectAccount)
+
+const switchAccount = require('./routes/user/switch-account');
+app.use("/api/users", switchAccount)
+
 const refresh = require("./routes/auth/refreshToken");
 app.use("/api/auth", refresh);
 

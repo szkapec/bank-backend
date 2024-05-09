@@ -117,11 +117,7 @@ app.patch("/recipient/edit", authenticate, async (req, res) => {
     console.log(`id`, _id);
     console.log(`user.id`, user.id);
     if (!user.id) {
-      res.send({
-        error: true,
-        message: "Nie jesteś zalogowany!",
-      });
-      return res.sendStatus(403);
+      return res.status(403).send({ message: "Nie jestes zalogowany" });
     } else {
       idUser = user;
     }
@@ -130,11 +126,7 @@ app.patch("/recipient/edit", authenticate, async (req, res) => {
   try {
     const user = await User.findById(idUser.id);
     if (!user) {
-      res.send({
-        error: true,
-        message: "Brak autoryzacji",
-      });
-      return res.sendStatus(400);
+      return res.status(400).send({ message: "Cos poszło nie tak" });
     }
     console.log(`id`, _id);
     let changeIndex;
@@ -144,10 +136,7 @@ app.patch("/recipient/edit", authenticate, async (req, res) => {
       return saved._id.toString() === _id;
     });
     if (!newUsers) {
-      res.send({
-        error: true,
-        message: "Nie ma takiego zapisanego przelewu",
-      });
+      return res.status(400).send({ message: "Nie ma takiego zapisanego przelewu" });
     }
     console.log(`newUsers`, newUsers);
     const newRecipient = {
@@ -165,11 +154,7 @@ app.patch("/recipient/edit", authenticate, async (req, res) => {
     res.send(user.savedRecipients);
     await user.save();
   } catch (error) {
-    res.send({
-      error: true,
-      message: "Coś poszło nie tak",
-    });
-    return res.sendStatus(500);
+    return res.status(500).send({ message: "Coś poszło nie tak" });
   }
 });
 

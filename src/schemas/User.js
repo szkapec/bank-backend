@@ -33,6 +33,14 @@ const Users = mongoose.Schema({
     permission: [String],
     country: String,
     color: String,
+    connectAccount: [
+        {
+            accountId: String,
+            accountName: String,
+            accountEmail: String,
+        }
+    ],
+    account: String,
     limit: {
         limitDay: Number,
         limitMouth: Number,

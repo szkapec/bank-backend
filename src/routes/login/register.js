@@ -7,7 +7,7 @@ const app = express();
 
 app.post("/register", async (req, res) => {
   try {
-    let { firstName, lastName, email, password, country, sex } = req.body;
+    let { firstName, lastName, email, password, country, sex, account } = req.body;
     let user = await User.findOne({
       email: email,
     }).select("-password");
@@ -34,6 +34,7 @@ app.post("/register", async (req, res) => {
       email,
       country,
       language: country,
+      account,
       permission: ['done'],
       sex,
       password,
@@ -42,6 +43,7 @@ app.post("/register", async (req, res) => {
       // token,
       bankAccountNumber: randomNumber,
       savedRecipients: [],
+      connectAccount: [],
       money: 10,
       premium: false,
       ban: false,
@@ -78,6 +80,8 @@ app.post("/register", async (req, res) => {
         ban: newUser.ban,
         color: newUser.color,
         limit: newUser.limit,
+        account: newUser.account,
+        connectAccount: newUser.connectAccount,
         message: 'Zalogowany',
     };
 
