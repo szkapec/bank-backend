@@ -7,6 +7,8 @@ const app = express();
 
 app.post("/register", async (req, res) => {
   try {
+    console.log('reqxxxxxxxxxxd2', req.body)
+    // console.log('resxxxxxxxxxxxxd', res)
     let { firstName, lastName, email, password, country, sex, account } = req.body;
     let user = await User.findOne({
       email: email,
@@ -20,12 +22,13 @@ app.post("/register", async (req, res) => {
       res.send("taki email juz jest");
       return res.status(401).send("Taki email juz istnieje");
     }
+
     // if (fetchUserName === userName) {
     //   return res.status(401).send("Taki username juz istnieje");
     // }
 
     const refreshToken = jwt.sign({ firstName, lastName, email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: 325000 })
-
+    console.log('refreshTokenxxxxxxxxxxd', refreshToken)
     const randomNumber = '921240' + Math.floor(Math.random() *  100000000000000);
     let newUser = new User({
       firstName,
@@ -55,13 +58,14 @@ app.post("/register", async (req, res) => {
       }
     });
 
+    console.log('randomNumberxxxxxxxxxxxxxxxxxxxxxx', randomNumber)
     const salt = await bcryptjs.genSalt(10);
     let hashedPassword = await bcryptjs.hash(password, salt);
     newUser.password = hashedPassword;
     await newUser.save(); //zapis w bazie danych
 
     const token = jwt.sign({ id: newUser._id, firstName: newUser.firstName, email: newUser.email }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
-
+    console.log('token xxxxxxxxxxxxxxxxxxxxxxxxxxxx', token)
     let payload = {
         id: newUser._id,
         token,
