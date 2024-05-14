@@ -9,7 +9,8 @@ const connectToDatabase = async () => {
     await mongoose.connect(process.env.MONGO_DB_REMOTE_URL);
     console.log("mongo db connected");
   } catch (error) {
-    console.log('error not connect to database', error.message, mongodbUrl);
+    console.log('brak polaczenia z baza', error, process.env.MONGO_DB_REMOTE_URL)
+    // console.log('error not connect to database', error.message, mongodbUrl);
   }
 };
 

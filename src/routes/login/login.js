@@ -12,20 +12,16 @@ app.post("/login", async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      res.send({
-        message: "Nie ma takiego użytkownika o takim e-mail",
-      });
-      return res.status(401).send("Nie ma takiego użytkownika o takim e-mail");
+     
+      return res.status(401).send({ message: "Nie ma takiego użytkownika o takim e-mail"});
     }
     if (user.ban) {
-      res.send({ message: "Twoje konto zostało zbanowane" });
-      return res.status(401).send("Twoje konto zostało zbanowane");
+      return res.status(401).send({ message: "Twoje konto zostało zbanowane"});
     }
 
     let doPasswordsMatch = await bcryptjs.compare(password, user.password);
     if (!doPasswordsMatch) {
-      res.send({ message: "Hasło nie pasuje" });
-      return res.status(401).send("Hasło nie pasuje");
+      return res.status(401).send({ message: "Hasło nie pasuje"});
     }
 
     const token = jwt.sign(

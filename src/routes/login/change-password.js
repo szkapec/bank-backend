@@ -14,8 +14,25 @@ app.post("/change-password", async (req, res) => {
         const salt = await bcryptjs.genSalt(10);
         let hashedPassword = await bcryptjs.hash(password, salt);
         user.password = hashedPassword;
-        await user.save();
-        return res.json({ message: 'Zmieniono hasło', password: true });
+        const createdDate = new Date(user.createdAt);
+        const newDate = new Date();
+
+        const month = newDate.getMonth() - createdDate.getMonth()
+        const day = newDate.getDay() - createdDate.getDay()
+        const hours = newDate.getHours() - createdDate.getHours()
+        console.log('createdDate', createdDate)
+        console.log('month', month)
+        console.log('day', day)
+        console.log('hours', hours)
+        if(month === 0 && day === 0 && hours <= 4) {
+          user.remind = undefined;
+          await user.save();
+          return res.json({ message: 'Zmieniono hasło', password: true });
+        } else {
+          return res.status(500).send({ message: "Podany kod wygasł" });
+        }
+        // 
+   
       }
     } catch (error) {
       console.log(`error`, error)

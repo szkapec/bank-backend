@@ -6,6 +6,10 @@ const jwt = require("jsonwebtoken");
 
 const app = express();
 
+
+const showHistory = require("./showHistory");
+app.use("/history-transfer", showHistory);
+
 app.post("/transfer", authenticate, async (req, res) => {
   try {
     const {
@@ -37,7 +41,9 @@ app.post("/transfer", authenticate, async (req, res) => {
       bankAccountNumber: numberSend,
     });
     const findUserIdNumber = await User.findById(myIdUser);
-
+    console.log(`findUserAccountNumber`, findUserAccountNumber)
+    console.log(`findUserIdNumber`, findUserIdNumber)
+    console.log(`myIdUser`, myIdUser)
     if (findUserAccountNumber && findUserIdNumber) {
       if (
         findUserIdNumber.bankAccountNumber ===
@@ -50,7 +56,7 @@ app.post("/transfer", authenticate, async (req, res) => {
       }
     } else {
       console.log(`Coś poszło nie tak`);
-      return res.status(500).send("Coś poszło nie tak");
+      return res.status(500).send({ message: "Nie ma użytkownika"});
     }
 
     const valueMoney =
