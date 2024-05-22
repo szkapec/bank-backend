@@ -49,6 +49,9 @@ app.post("/login", async (req, res) => {
       money: user.money,
       ban: user.ban,
       color: user.color,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      account: user.account,
       message: "Zalogowany",
     };
 
