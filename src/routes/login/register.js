@@ -58,7 +58,6 @@ app.post("/register", async (req, res) => {
       }
     });
 
-    console.log('randomNumberxxxxxxxxxxxxxxxxxxxxxx', randomNumber)
     const salt = await bcryptjs.genSalt(10);
     let hashedPassword = await bcryptjs.hash(password, salt);
     newUser.password = hashedPassword;
@@ -85,6 +84,8 @@ app.post("/register", async (req, res) => {
         color: newUser.color,
         limit: newUser.limit,
         account: newUser.account,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
         connectAccount: newUser.connectAccount,
         message: 'Zalogowany',
     };

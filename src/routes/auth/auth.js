@@ -25,6 +25,9 @@ app.get("/auth/:user_id", authenticateToken, async (req, res) => {
       language,
       permission,
       color,
+      firstName,
+      lastName,
+      account,
       limit
     } = user;
     
@@ -39,6 +42,9 @@ app.get("/auth/:user_id", authenticateToken, async (req, res) => {
       permission,
       premium,
       money,
+      firstName,
+      lastName,
+      account,
       message: "Zalogowany",
       ban,
       color,

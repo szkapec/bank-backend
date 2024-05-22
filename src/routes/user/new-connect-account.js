@@ -25,9 +25,10 @@ app.post("/new-connect-account", async (req, res) => {
         return res.status(500).send({ message: "Brak autoryzacji" });
       }
       let callBackNewConnectionToUser = await User.findOne({
+        //uzytkownik na ktorym jestesmy zalogowani
         email: userAuth.email,
       });
-      let newConnectionToUser = await User.findOne({ email });
+      let newConnectionToUser = await User.findOne({ email }); //uzytkownik do ktorego chcemy sie polaczyc
       if (!newConnectionToUser) {
         return res
           .status(400)
@@ -55,24 +56,39 @@ app.post("/new-connect-account", async (req, res) => {
         return res.status(400).send({ message: "Połączenie już istnieje" });
       }
 
+      // const allConnectAccounts = [
+      //   ...newConnectionToUser.connectAccount,
+      //   ...callBackNewConnectionToUser.connectAccount,
+      // ];
+      // const uniqueAccounts = new Map(
+      //   allConnectAccounts.map((account) => {
+      //     return [account._id, account];
+      //   })
+      // );
+      // const uniqueConnectAccounts = [...uniqueAccounts.values()];
+    
+      // newConnectionToUser.connectAccount = uniqueConnectAccounts;
+      // callBackNewConnectionToUser.connectAccount = uniqueConnectAccounts
+
       newConnectionToUser.connectAccount.unshift({
         accountId: userAuth.id,
         accountName: callBackNewConnectionToUser.account,
-        accountEmail: callBackNewConnectionToUser.email
+        accountEmail: callBackNewConnectionToUser.email,
       });
       callBackNewConnectionToUser.connectAccount.unshift({
         accountId: newConnectionToUser.id,
         accountName: newConnectionToUser.account,
-        accountEmail: newConnectionToUser.email
+        accountEmail: newConnectionToUser.email,
       });
 
       newConnectionToUser.save();
       callBackNewConnectionToUser.save();
-      return res.json({ message: "Dodano konto", newAccount: {
-        accountId: newConnectionToUser.id,
-        accountName: newConnectionToUser.account,
-        accountEmail: newConnectionToUser.email
-      } });
+
+      // Moim celem zawodowym jest dalszy rozwój w technolgiach frontendowych oraz 
+      return res.json({
+        message: "Dodano konto",
+        newAccount: callBackNewConnectionToUser,
+      });
     } catch (error) {
       console.log(`error`, error);
       return res
