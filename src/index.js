@@ -45,6 +45,9 @@ app.use("/api/users", setNewPassword)
 const newConnectAccount = require('./routes/user/new-connect-account');
 app.use("/api/users", newConnectAccount)
 
+const separateUser = require('./routes/user/separate-account');
+app.use("/api/users", separateUser)
+
 const connectAccount = require('./routes/user/connect-account');
 app.use("/api/users", connectAccount)
 
